@@ -8,9 +8,7 @@ struct BookCardView: View {
             // Cover
             Group {
                 if let coverUrl = book.coverUrl, let url = URL(string: coverUrl) {
-                    AsyncImage(url: url) { image in
-                        image.resizable().aspectRatio(contentMode: .fill)
-                    } placeholder: {
+                    CachedAsyncImage(url: url) {
                         coverPlaceholder
                     }
                 } else {

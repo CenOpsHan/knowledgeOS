@@ -49,9 +49,7 @@ struct AddBookView: View {
                                     Button { viewModel.selectResult(result) } label: {
                                         HStack(spacing: 12) {
                                             if let url = result.coverUrl, let imgUrl = URL(string: url) {
-                                                AsyncImage(url: imgUrl) { image in
-                                                    image.resizable().aspectRatio(contentMode: .fill)
-                                                } placeholder: { Color.gray.opacity(0.3) }
+                                                CachedAsyncImage(url: imgUrl) { Color.gray.opacity(0.3) }
                                                 .frame(width: 40, height: 60)
                                                 .clipShape(RoundedRectangle(cornerRadius: 4))
                                             }
@@ -78,11 +76,10 @@ struct AddBookView: View {
 
                     // Cover preview
                     if let coverUrl = viewModel.coverUrl, let url = URL(string: coverUrl) {
-                        AsyncImage(url: url) { image in
-                            image.resizable().aspectRatio(contentMode: .fit)
-                        } placeholder: { ProgressView() }
-                        .frame(height: 180)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        CachedAsyncImage(url: url) { ProgressView() }
+                            .aspectRatio(2/3, contentMode: .fit)
+                            .frame(height: 180)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
 
                     // Form

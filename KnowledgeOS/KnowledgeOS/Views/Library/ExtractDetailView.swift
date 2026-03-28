@@ -95,9 +95,7 @@ struct ExtractDetailView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
                                 ForEach(photoURLs, id: \.absoluteString) { url in
-                                    AsyncImage(url: url) { image in
-                                        image.resizable().aspectRatio(contentMode: .fill)
-                                    } placeholder: { ProgressView() }
+                                    CachedAsyncImage(url: url) { ProgressView() }
                                     .frame(width: 150, height: 200)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }

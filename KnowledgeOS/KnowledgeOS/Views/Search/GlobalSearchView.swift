@@ -35,9 +35,7 @@ struct GlobalSearchView: View {
                                         NavigationLink(destination: BookDetailView(book: book)) {
                                             HStack(spacing: 12) {
                                                 if let url = book.coverUrl, let imgUrl = URL(string: url) {
-                                                    AsyncImage(url: imgUrl) { image in
-                                                        image.resizable().aspectRatio(contentMode: .fill)
-                                                    } placeholder: { Color.gray.opacity(0.3) }
+                                                    CachedAsyncImage(url: imgUrl) { Color.gray.opacity(0.3) }
                                                     .frame(width: 32, height: 48)
                                                     .clipShape(RoundedRectangle(cornerRadius: 4))
                                                 }
