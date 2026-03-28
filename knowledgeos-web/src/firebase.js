@@ -3,14 +3,13 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 
-// TODO: Replace with your Firebase project config from Firebase Console
 const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'knowledgeos.firebaseapp.com',
-  projectId: 'knowledgeos',
-  storageBucket: 'knowledgeos.firebasestorage.app',
-  messagingSenderId: 'YOUR_SENDER_ID',
-  appId: 'YOUR_APP_ID',
+  apiKey: 'AIzaSyDuocsxOvWJkE9iDgryLccmGEKg9gTsHGk',
+  authDomain: 'knowledgeos-80279.firebaseapp.com',
+  projectId: 'knowledgeos-80279',
+  storageBucket: 'knowledgeos-80279.firebasestorage.app',
+  messagingSenderId: '820047823170',
+  appId: '1:820047823170:web:c1b7542dee9c47d3b9c8db',
 }
 
 const app = initializeApp(firebaseConfig)
