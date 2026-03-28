@@ -4,6 +4,7 @@ import MarkdownUI
 struct SkillDetailView: View {
     @EnvironmentObject var authService: AuthService
     @StateObject private var viewModel = SkillDetailViewModel()
+    @Environment(\.dismiss) private var dismiss
 
     let skill: Skill
     @State private var expandedSections: Set<String> = []
@@ -72,6 +73,7 @@ struct SkillDetailView: View {
                 guard let userId = authService.userId, let id = skill.id else { return }
                 Task {
                     try? await FirestoreService().deleteSkill(userId: userId, skillId: id)
+                    dismiss()
                 }
             }
             Button("Cancel", role: .cancel) {}

@@ -12,6 +12,7 @@ struct BookDetailView: View {
     @State private var showAddSynthesis = false
     @State private var noteExpanded = false
     @State private var personalNote: String = ""
+    @State private var noteSaveTask: Task<Void, Never>?
 
     var body: some View {
         ScrollView {
@@ -138,8 +139,11 @@ struct BookDetailView: View {
                     .background(Theme.surface)
                     .cornerRadius(Theme.inputRadius)
                     .onChange(of: personalNote) { newValue in
-                        guard let userId = authService.userId, let bookId = book.id else { return }
-                        Task {
+                        noteSaveTask?.cancel()
+                        noteSaveTask = Task {
+                            try? await Task.sleep(nanoseconds: 800_000_000)
+                            guard !Task.isCancelled else { return }
+                            guard let userId = authService.userId, let bookId = book.id else { return }
                             await viewModel.updateBook(userId: userId, bookId: bookId, data: ["personalNote": newValue])
                         }
                     }

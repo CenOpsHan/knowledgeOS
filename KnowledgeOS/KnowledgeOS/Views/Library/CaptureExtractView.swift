@@ -235,6 +235,7 @@ struct CaptureExtractView: View {
     // MARK: - Actions
 
     private func loadPhotos(_ items: [PhotosPickerItem]) async {
+        selectedImages = []
         for item in items {
             if let data = try? await item.loadTransferable(type: Data.self),
                let image = UIImage(data: data) {
