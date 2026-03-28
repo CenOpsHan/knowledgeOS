@@ -35,13 +35,19 @@ struct TopicDetailView: View {
 
                 if filter != "syntheses" {
                     ForEach(viewModel.extracts) { extract in
-                        ExtractCardView(extract: extract)
+                        NavigationLink(destination: ExtractDetailView(extract: extract, bookId: extract.bookId)) {
+                            ExtractCardView(extract: extract)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
 
                 if filter != "extracts" {
                     ForEach(viewModel.syntheses) { synthesis in
-                        SynthesisCardView(synthesis: synthesis)
+                        NavigationLink(destination: SynthesisDetailView(synthesis: synthesis, bookId: synthesis.bookId)) {
+                            SynthesisCardView(synthesis: synthesis)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }

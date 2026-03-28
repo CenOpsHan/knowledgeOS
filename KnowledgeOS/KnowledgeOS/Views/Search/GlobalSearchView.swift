@@ -60,11 +60,14 @@ struct GlobalSearchView: View {
                             if !viewModel.extractResults.isEmpty {
                                 section("Extracts", icon: "quote.opening") {
                                     ForEach(viewModel.extractResults) { extract in
-                                        Text(extract.content.prefix(150))
-                                            .font(.system(.caption, design: .monospaced))
-                                            .foregroundColor(Theme.textPrimary)
-                                            .lineLimit(2)
-                                            .padding(.vertical, 4)
+                                        NavigationLink(destination: ExtractDetailView(extract: extract, bookId: extract.bookId)) {
+                                            Text(extract.content.prefix(150))
+                                                .font(.system(.caption, design: .monospaced))
+                                                .foregroundColor(Theme.textPrimary)
+                                                .lineLimit(2)
+                                                .padding(.vertical, 4)
+                                        }
+                                        .buttonStyle(.plain)
                                     }
                                 }
                             }
@@ -72,16 +75,19 @@ struct GlobalSearchView: View {
                             if !viewModel.synthesisResults.isEmpty {
                                 section("Syntheses", icon: "lightbulb") {
                                     ForEach(viewModel.synthesisResults) { synthesis in
-                                        VStack(alignment: .leading) {
-                                            Text(synthesis.title)
-                                                .font(.subheadline.weight(.semibold))
-                                                .foregroundColor(Theme.textPrimary)
-                                            Text(synthesis.content.prefix(100))
-                                                .font(.caption)
-                                                .foregroundColor(Theme.textSecondary)
-                                                .lineLimit(1)
+                                        NavigationLink(destination: SynthesisDetailView(synthesis: synthesis, bookId: synthesis.bookId)) {
+                                            VStack(alignment: .leading) {
+                                                Text(synthesis.title)
+                                                    .font(.subheadline.weight(.semibold))
+                                                    .foregroundColor(Theme.textPrimary)
+                                                Text(synthesis.content.prefix(100))
+                                                    .font(.caption)
+                                                    .foregroundColor(Theme.textSecondary)
+                                                    .lineLimit(1)
+                                            }
+                                            .padding(.vertical, 4)
                                         }
-                                        .padding(.vertical, 4)
+                                        .buttonStyle(.plain)
                                     }
                                 }
                             }
@@ -89,13 +95,16 @@ struct GlobalSearchView: View {
                             if !viewModel.skillResults.isEmpty {
                                 section("Skills", icon: "star") {
                                     ForEach(viewModel.skillResults) { skill in
-                                        HStack(spacing: 8) {
-                                            Text(skill.icon)
-                                            Text(skill.name)
-                                                .font(.subheadline)
-                                                .foregroundColor(Theme.textPrimary)
+                                        NavigationLink(destination: SkillDetailView(skill: skill)) {
+                                            HStack(spacing: 8) {
+                                                Text(skill.icon)
+                                                Text(skill.name)
+                                                    .font(.subheadline)
+                                                    .foregroundColor(Theme.textPrimary)
+                                            }
+                                            .padding(.vertical, 4)
                                         }
-                                        .padding(.vertical, 4)
+                                        .buttonStyle(.plain)
                                     }
                                 }
                             }
