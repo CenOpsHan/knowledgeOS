@@ -1,0 +1,20 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "extracts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "bookId", "order": "ASCENDING" },
+        { "fieldPath": "dateCreated", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "syntheses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "bookId", "order": "ASCENDING" },
+        { "fieldPath": "dateCreated", "order": "DESCENDING" }
+      ]
+    }
+  ]
+}
