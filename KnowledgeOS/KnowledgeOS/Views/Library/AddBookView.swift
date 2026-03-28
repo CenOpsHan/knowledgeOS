@@ -68,6 +68,7 @@ struct AddBookView: View {
                                         .padding(.vertical, 8)
                                         .padding(.horizontal, 12)
                                     }
+                                    .accessibilityLabel("Select \(result.title)")
                                     Divider().background(Theme.border)
                                 }
                             }
@@ -115,8 +116,12 @@ struct AddBookView: View {
                     Button {
                         guard let userId = authService.userId else { return }
                         Task {
-                            _ = try? await viewModel.save(userId: userId)
-                            dismiss()
+                            do {
+                                _ = try await viewModel.save(userId: userId)
+                                dismiss()
+                            } catch {
+                                viewModel.searchError = "Save failed: \(error.localizedDescription)"
+                            }
                         }
                     } label: {
                         Text(viewModel.isSaving ? "Adding..." : "Add to Library")
