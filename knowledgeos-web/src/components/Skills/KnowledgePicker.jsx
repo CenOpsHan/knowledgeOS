@@ -17,6 +17,8 @@ export default function KnowledgePicker({
   const [bookFilter, setBookFilter] = useState('')
   const [selectedExtracts, setSelectedExtracts] = useState(new Set(linkedExtractIds))
   const [selectedSyntheses, setSelectedSyntheses] = useState(new Set(linkedSynthesisIds))
+  const initialExtractIds = new Set(linkedExtractIds)
+  const initialSynthesisIds = new Set(linkedSynthesisIds)
 
   const { extracts } = useExtracts()
   const { syntheses } = useSyntheses()
@@ -181,7 +183,13 @@ export default function KnowledgePicker({
 
         <div className="px-4 py-3 border-t border-border">
           <button
-            onClick={() => onLink([...selectedExtracts], [...selectedSyntheses])}
+            onClick={() => {
+              const toLink = [...selectedExtracts].filter((id) => !initialExtractIds.has(id))
+              const toLinkSynth = [...selectedSyntheses].filter((id) => !initialSynthesisIds.has(id))
+              const toUnlinkExtracts = [...initialExtractIds].filter((id) => !selectedExtracts.has(id))
+              const toUnlinkSynth = [...initialSynthesisIds].filter((id) => !selectedSyntheses.has(id))
+              onLink(toLink, toLinkSynth, toUnlinkExtracts, toUnlinkSynth)
+            }}
             className="btn-primary w-full"
             disabled={totalSelected === 0}
           >

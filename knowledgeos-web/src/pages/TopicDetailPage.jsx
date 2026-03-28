@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, MoreHorizontal, ChevronDown, ChevronRight } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
@@ -51,8 +51,10 @@ export default function TopicDetailPage() {
     ...taggedSyntheses.map((s) => s.bookId),
   ])]
 
-  // Auto-expand all books
-  useState(() => setExpandedBooks(new Set(bookIds)))
+  // Auto-expand all books when data loads
+  useEffect(() => {
+    if (bookIds.length > 0) setExpandedBooks(new Set(bookIds))
+  }, [bookIds.join(',')])
 
   const relatedSkills = skills.filter((s) =>
     s.sections?.some((sec) => {

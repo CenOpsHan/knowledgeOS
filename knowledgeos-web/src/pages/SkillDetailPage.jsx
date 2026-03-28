@@ -82,9 +82,17 @@ export default function SkillDetailPage() {
     setExpandedSections(next)
   }
 
-  const handleLink = async (sectionId, extractIds, synthesisIds) => {
+  const handleLink = async (sectionId, extractIds, synthesisIds, unlinkExtractIds = [], unlinkSynthIds = []) => {
     if (!user) return
-    await linkKnowledgeToSkill(user.uid, skillId, sectionId, extractIds, synthesisIds)
+    if (extractIds.length > 0 || synthesisIds.length > 0) {
+      await linkKnowledgeToSkill(user.uid, skillId, sectionId, extractIds, synthesisIds)
+    }
+    for (const id of unlinkExtractIds) {
+      await unlinkKnowledgeFromSkill(user.uid, skillId, sectionId, 'extract', id)
+    }
+    for (const id of unlinkSynthIds) {
+      await unlinkKnowledgeFromSkill(user.uid, skillId, sectionId, 'synthesis', id)
+    }
     await loadSkill()
     setPickerSectionId(null)
   }
@@ -267,7 +275,7 @@ export default function SkillDetailPage() {
       {pickerSectionId && (
         <KnowledgePicker
           onClose={() => setPickerSectionId(null)}
-          onLink={(extractIds, synthesisIds) => handleLink(pickerSectionId, extractIds, synthesisIds)}
+          onLink={(extractIds, synthesisIds, unlinkExtracts, unlinkSynths) => handleLink(pickerSectionId, extractIds, synthesisIds, unlinkExtracts, unlinkSynths)}
           linkedExtractIds={skill.sections?.find((s) => s.id === pickerSectionId)?.linkedExtractIds || []}
           linkedSynthesisIds={skill.sections?.find((s) => s.id === pickerSectionId)?.linkedSynthesisIds || []}
         />

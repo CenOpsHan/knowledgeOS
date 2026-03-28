@@ -12,8 +12,10 @@ class AuthService: ObservableObject {
 
     init() {
         authStateHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
-            self?.user = user
-            self?.isLoading = false
+            Task { @MainActor in
+                self?.user = user
+                self?.isLoading = false
+            }
         }
     }
 

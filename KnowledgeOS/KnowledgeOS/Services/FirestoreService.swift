@@ -12,6 +12,28 @@ class FirestoreService {
         db.collection("users").document(userId).collection(collection).document(docId)
     }
 
+    private enum BatchOp {
+        case delete(DocumentReference)
+        case update(DocumentReference, [String: Any])
+        case set(DocumentReference, [String: Any])
+    }
+
+    private func commitInChunks(_ ops: [BatchOp]) async throws {
+        let chunkSize = 499
+        for i in stride(from: 0, to: ops.count, by: chunkSize) {
+            let chunk = ops[i..<min(i + chunkSize, ops.count)]
+            let batch = db.batch()
+            for op in chunk {
+                switch op {
+                case .delete(let ref): batch.deleteDocument(ref)
+                case .update(let ref, let data): batch.updateData(data, forDocument: ref)
+                case .set(let ref, let data): batch.setData(data, forDocument: ref)
+                }
+            }
+            try await batch.commit()
+        }
+    }
+
     // MARK: - Books
 
     func subscribeBooks(userId: String, completion: @escaping ([Book]) -> Void) -> ListenerRegistration {
@@ -19,7 +41,7 @@ class FirestoreService {
             .order(by: "dateAdded", descending: true)
             .addSnapshotListener { snapshot, _ in
                 let books = snapshot?.documents.compactMap { try? $0.data(as: Book.self) } ?? []
-                completion(books)
+                DispatchQueue.main.async { completion(books) }
             }
     }
 
@@ -40,18 +62,17 @@ class FirestoreService {
     }
 
     func deleteBook(userId: String, bookId: String) async throws {
-        let batch = db.batch()
-        batch.deleteDocument(userDoc(userId, "books", bookId))
+        var ops: [BatchOp] = [.delete(userDoc(userId, "books", bookId))]
 
         let extracts = try await userCol(userId, "extracts")
             .whereField("bookId", isEqualTo: bookId).getDocuments()
-        extracts.documents.forEach { batch.deleteDocument($0.reference) }
+        extracts.documents.forEach { ops.append(.delete($0.reference)) }
 
         let syntheses = try await userCol(userId, "syntheses")
             .whereField("bookId", isEqualTo: bookId).getDocuments()
-        syntheses.documents.forEach { batch.deleteDocument($0.reference) }
+        syntheses.documents.forEach { ops.append(.delete($0.reference)) }
 
-        try await batch.commit()
+        try await commitInChunks(ops)
     }
 
     // MARK: - Extracts
@@ -62,7 +83,7 @@ class FirestoreService {
             .order(by: "dateCreated", descending: true)
             .addSnapshotListener { snapshot, _ in
                 let items = snapshot?.documents.compactMap { try? $0.data(as: Extract.self) } ?? []
-                completion(items)
+                DispatchQueue.main.async { completion(items) }
             }
     }
 
@@ -105,7 +126,7 @@ class FirestoreService {
             .order(by: "dateCreated", descending: true)
             .addSnapshotListener { snapshot, _ in
                 let items = snapshot?.documents.compactMap { try? $0.data(as: Synthesis.self) } ?? []
-                completion(items)
+                DispatchQueue.main.async { completion(items) }
             }
     }
 
@@ -147,7 +168,7 @@ class FirestoreService {
             .order(by: "dateCreated", descending: true)
             .addSnapshotListener { snapshot, _ in
                 let items = snapshot?.documents.compactMap { try? $0.data(as: Skill.self) } ?? []
-                completion(items)
+                DispatchQueue.main.async { completion(items) }
             }
     }
 
@@ -178,7 +199,7 @@ class FirestoreService {
                 tag?.name = doc.documentID
                 return tag
             } ?? []
-            completion(items)
+            DispatchQueue.main.async { completion(items) }
         }
     }
 
@@ -190,15 +211,14 @@ class FirestoreService {
     }
 
     func deleteTag(userId: String, tagName: String) async throws {
-        let batch = db.batch()
-        batch.deleteDocument(userDoc(userId, "tags", tagName))
+        var ops: [BatchOp] = [.delete(userDoc(userId, "tags", tagName))]
 
         let extracts = try await userCol(userId, "extracts")
             .whereField("tags", arrayContains: tagName).getDocuments()
         for doc in extracts.documents {
             var tags = (doc.data()["tags"] as? [String]) ?? []
             tags.removeAll { $0 == tagName }
-            batch.updateData(["tags": tags], forDocument: doc.reference)
+            ops.append(.update(doc.reference, ["tags": tags]))
         }
 
         let syntheses = try await userCol(userId, "syntheses")
@@ -206,9 +226,9 @@ class FirestoreService {
         for doc in syntheses.documents {
             var tags = (doc.data()["tags"] as? [String]) ?? []
             tags.removeAll { $0 == tagName }
-            batch.updateData(["tags": tags], forDocument: doc.reference)
+            ops.append(.update(doc.reference, ["tags": tags]))
         }
 
-        try await batch.commit()
+        try await commitInChunks(ops)
     }
 }

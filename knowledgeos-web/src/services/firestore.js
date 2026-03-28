@@ -2,8 +2,8 @@ import {
   collection,
   doc,
   addDoc,
+  setDoc,
   updateDoc,
-  deleteDoc,
   getDoc,
   getDocs,
   query,
@@ -13,7 +13,6 @@ import {
   writeBatch,
   increment,
   serverTimestamp,
-  Timestamp,
 } from 'firebase/firestore'
 import { db } from '../firebase'
 
@@ -23,6 +22,21 @@ function userCol(userId, colName) {
 
 function userDoc(userId, colName, docId) {
   return doc(db, 'users', userId, colName, docId)
+}
+
+// Commit operations in chunks of 499 to stay under Firestore's 500-op batch limit
+async function commitInChunks(ops) {
+  const CHUNK_SIZE = 499
+  for (let i = 0; i < ops.length; i += CHUNK_SIZE) {
+    const chunk = ops.slice(i, i + CHUNK_SIZE)
+    const batch = writeBatch(db)
+    for (const op of chunk) {
+      if (op.type === 'delete') batch.delete(op.ref)
+      else if (op.type === 'set') batch.set(op.ref, op.data)
+      else if (op.type === 'update') batch.update(op.ref, op.data)
+    }
+    await batch.commit()
+  }
 }
 
 // ─── Books ───
@@ -56,20 +70,19 @@ export async function updateBook(userId, bookId, data) {
 }
 
 export async function deleteBook(userId, bookId) {
-  const batch = writeBatch(db)
-  batch.delete(userDoc(userId, 'books', bookId))
+  const ops = [{ type: 'delete', ref: userDoc(userId, 'books', bookId) }]
 
   const extractsSnap = await getDocs(
     query(userCol(userId, 'extracts'), where('bookId', '==', bookId))
   )
-  extractsSnap.docs.forEach((d) => batch.delete(d.ref))
+  extractsSnap.docs.forEach((d) => ops.push({ type: 'delete', ref: d.ref }))
 
   const synthesesSnap = await getDocs(
     query(userCol(userId, 'syntheses'), where('bookId', '==', bookId))
   )
-  synthesesSnap.docs.forEach((d) => batch.delete(d.ref))
+  synthesesSnap.docs.forEach((d) => ops.push({ type: 'delete', ref: d.ref }))
 
-  await batch.commit()
+  await commitInChunks(ops)
 }
 
 // ─── Extracts ───
@@ -205,13 +218,11 @@ export async function updateSkill(userId, skillId, data) {
 }
 
 export async function deleteSkill(userId, skillId) {
-  // Remove skill references from linked extracts and syntheses
   const skillSnap = await getDoc(userDoc(userId, 'skills', skillId))
   if (!skillSnap.exists()) return
 
   const skill = skillSnap.data()
-  const batch = writeBatch(db)
-  batch.delete(userDoc(userId, 'skills', skillId))
+  const ops = [{ type: 'delete', ref: userDoc(userId, 'skills', skillId) }]
 
   const linkedIds = new Set()
   for (const section of skill.sections || []) {
@@ -225,13 +236,11 @@ export async function deleteSkill(userId, skillId) {
     const docSnap = await getDoc(userDoc(userId, colName, id))
     if (docSnap.exists()) {
       const current = docSnap.data().linkedSkillIds || []
-      batch.update(docSnap.ref, {
-        linkedSkillIds: current.filter((sid) => sid !== skillId),
-      })
+      ops.push({ type: 'update', ref: docSnap.ref, data: { linkedSkillIds: current.filter((sid) => sid !== skillId) } })
     }
   }
 
-  await batch.commit()
+  await commitInChunks(ops)
 }
 
 export async function linkKnowledgeToSkill(userId, skillId, sectionId, extractIds, synthesisIds) {
@@ -322,63 +331,54 @@ export function subscribeTags(userId, callback) {
 
 export async function createTag(userId, name, color) {
   const tagDoc = doc(db, 'users', userId, 'tags', name.toLowerCase())
-  const { setDoc } = await import('firebase/firestore')
   await setDoc(tagDoc, { color, dateCreated: serverTimestamp() })
 }
 
 export async function updateTag(userId, oldName, newName, color) {
-  const batch = writeBatch(db)
-  const { setDoc: firestoreSetDoc } = await import('firebase/firestore')
-
   if (oldName !== newName) {
-    batch.delete(doc(db, 'users', userId, 'tags', oldName))
-    // Need to use setDoc for the new tag
-    await firestoreSetDoc(doc(db, 'users', userId, 'tags', newName), {
-      color,
-      dateCreated: serverTimestamp(),
-    })
+    // Collect all operations
+    const ops = []
+    ops.push({ type: 'delete', ref: doc(db, 'users', userId, 'tags', oldName) })
+    ops.push({ type: 'set', ref: doc(db, 'users', userId, 'tags', newName), data: { color, dateCreated: serverTimestamp() } })
 
-    // Update all extracts with this tag
     const extractsSnap = await getDocs(
       query(userCol(userId, 'extracts'), where('tags', 'array-contains', oldName))
     )
     extractsSnap.docs.forEach((d) => {
       const tags = d.data().tags.map((t) => (t === oldName ? newName : t))
-      batch.update(d.ref, { tags })
+      ops.push({ type: 'update', ref: d.ref, data: { tags } })
     })
 
-    // Update all syntheses with this tag
     const synthesesSnap = await getDocs(
       query(userCol(userId, 'syntheses'), where('tags', 'array-contains', oldName))
     )
     synthesesSnap.docs.forEach((d) => {
       const tags = d.data().tags.map((t) => (t === oldName ? newName : t))
-      batch.update(d.ref, { tags })
+      ops.push({ type: 'update', ref: d.ref, data: { tags } })
     })
-  } else {
-    batch.update(doc(db, 'users', userId, 'tags', oldName), { color })
-  }
 
-  await batch.commit()
+    await commitInChunks(ops)
+  } else {
+    await updateDoc(doc(db, 'users', userId, 'tags', oldName), { color })
+  }
 }
 
 export async function deleteTag(userId, tagName) {
-  const batch = writeBatch(db)
-  batch.delete(doc(db, 'users', userId, 'tags', tagName))
+  const ops = [{ type: 'delete', ref: doc(db, 'users', userId, 'tags', tagName) }]
 
   const extractsSnap = await getDocs(
     query(userCol(userId, 'extracts'), where('tags', 'array-contains', tagName))
   )
   extractsSnap.docs.forEach((d) => {
-    batch.update(d.ref, { tags: d.data().tags.filter((t) => t !== tagName) })
+    ops.push({ type: 'update', ref: d.ref, data: { tags: d.data().tags.filter((t) => t !== tagName) } })
   })
 
   const synthesesSnap = await getDocs(
     query(userCol(userId, 'syntheses'), where('tags', 'array-contains', tagName))
   )
   synthesesSnap.docs.forEach((d) => {
-    batch.update(d.ref, { tags: d.data().tags.filter((t) => t !== tagName) })
+    ops.push({ type: 'update', ref: d.ref, data: { tags: d.data().tags.filter((t) => t !== tagName) } })
   })
 
-  await batch.commit()
+  await commitInChunks(ops)
 }
