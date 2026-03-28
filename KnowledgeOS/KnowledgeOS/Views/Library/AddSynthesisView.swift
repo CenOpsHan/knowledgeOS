@@ -23,9 +23,9 @@ struct AddSynthesisView: View {
                     TextField("Give this takeaway a title...", text: $title)
                         .font(.title3.weight(.semibold))
                         .padding()
-                        .background(Theme.surface)
+                        .background(Color.white.opacity(0.5))
                         .cornerRadius(Theme.inputRadius)
-                        .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                        .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
                     // Markdown editor
                     VStack(alignment: .leading, spacing: 0) {
@@ -49,7 +49,7 @@ struct AddSynthesisView: View {
                             .font(.caption.weight(.medium))
                         }
                         .padding(8)
-                        .background(Theme.surface)
+                        .background(Color.white.opacity(0.5))
 
                         if showPreview {
                             Markdown(content)
@@ -63,15 +63,14 @@ struct AddSynthesisView: View {
                                 .padding(8)
                         }
                     }
-                    .background(Theme.surface)
-                    .cornerRadius(Theme.cardRadius)
-                    .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 1))
+                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
+                    .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 0.5))
 
                     TextField("e.g. Ch. 4, pp. 88-102", text: $pageReferences)
                         .padding()
-                        .background(Theme.surface)
+                        .background(Color.white.opacity(0.5))
                         .cornerRadius(Theme.inputRadius)
-                        .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                        .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
                     if let userId = authService.userId {
                         TagInputView(selectedTags: $tags, userId: userId)
@@ -79,7 +78,7 @@ struct AddSynthesisView: View {
                 }
                 .padding()
             }
-            .background(Theme.bg)
+            .background(Color(.systemBackground))
             .navigationTitle("New Synthesis")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

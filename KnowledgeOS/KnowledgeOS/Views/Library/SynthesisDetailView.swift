@@ -31,7 +31,7 @@ struct SynthesisDetailView: View {
                     TextField("Title", text: $editTitle)
                         .font(.title2.bold())
                         .padding()
-                        .background(Theme.surface)
+                        .background(Color.white.opacity(0.5))
                         .cornerRadius(Theme.inputRadius)
 
                     TextEditor(text: $editContent)
@@ -39,12 +39,12 @@ struct SynthesisDetailView: View {
                         .frame(minHeight: 200)
                         .scrollContentBackground(.hidden)
                         .padding()
-                        .background(Theme.surface)
+                        .background(Color.white.opacity(0.4))
                         .cornerRadius(Theme.inputRadius)
 
                     TextField("Page references", text: $editPageRefs)
                         .padding()
-                        .background(Theme.surface)
+                        .background(Color.white.opacity(0.5))
                         .cornerRadius(Theme.inputRadius)
                 } else {
                     Text(synthesis.title)
@@ -89,7 +89,7 @@ struct SynthesisDetailView: View {
             }
             .padding()
         }
-        .background(Theme.bg)
+        .background(Color(.systemBackground))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

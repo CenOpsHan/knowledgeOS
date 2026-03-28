@@ -50,7 +50,7 @@ struct ExtractCardView: View {
         .cornerRadius(Theme.cardRadius)
         .overlay(
             RoundedRectangle(cornerRadius: Theme.cardRadius)
-                .stroke(Theme.border, lineWidth: 1)
+                .stroke(Theme.border, lineWidth: 0.5)
         )
     }
 }

@@ -38,7 +38,7 @@ struct BookDetailView: View {
             }
             .padding()
         }
-        .background(Theme.bg)
+        .background(Color(.systemBackground))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -47,11 +47,11 @@ struct BookDetailView: View {
                         Button { updateStatus("reading") } label: {
                             Label("Reading", systemImage: book.status == "reading" ? "checkmark" : "book")
                         }
-                        Button { updateStatus("finished") } label: {
-                            Label("Finished", systemImage: book.status == "finished" ? "checkmark" : "checkmark.circle")
+                        Button { updateStatus("completed") } label: {
+                            Label("Completed", systemImage: book.status == "completed" ? "checkmark" : "checkmark.circle")
                         }
-                        Button { updateStatus("wishlist") } label: {
-                            Label("Wishlist", systemImage: book.status == "wishlist" ? "checkmark" : "bookmark")
+                        Button { updateStatus("shelved") } label: {
+                            Label("Shelved", systemImage: book.status == "shelved" ? "checkmark" : "bookmark")
                         }
                     }
                     Button(role: .destructive) { showDelete = true } label: {
@@ -113,8 +113,16 @@ struct BookDetailView: View {
                 .foregroundColor(Theme.textSecondary)
 
             if let publisher = book.publisher {
-                Text([publisher, book.publishedDate?.prefix(4).map(String.init), book.pageCount.map { "\($0) pages" }]
-                    .compactMap { $0 }.joined(separator: " · "))
+                Text({
+                    var parts: [String] = [publisher]
+                    if let date = book.publishedDate {
+                        parts.append(String(date.prefix(4)))
+                    }
+                    if let count = book.pageCount {
+                        parts.append("\(count) pages")
+                    }
+                    return parts.joined(separator: " · ")
+                }())
                 .font(.caption)
                 .foregroundColor(Theme.textTertiary)
             }
@@ -147,7 +155,7 @@ struct BookDetailView: View {
                 TextEditor(text: $personalNote)
                     .frame(minHeight: 80)
                     .scrollContentBackground(.hidden)
-                    .background(Theme.surface)
+                    .background(Color.white.opacity(0.4))
                     .cornerRadius(Theme.inputRadius)
                     .onChange(of: personalNote) { newValue in
                         noteSaveTask?.cancel()
@@ -161,9 +169,8 @@ struct BookDetailView: View {
             }
         }
         .padding(Theme.cardPadding)
-        .background(Theme.surface)
-        .cornerRadius(Theme.cardRadius)
-        .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 1))
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
+        .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 0.5))
     }
 
     // MARK: - Stats
@@ -187,9 +194,8 @@ struct BookDetailView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(12)
-        .background(Theme.surface)
-        .cornerRadius(Theme.cardRadius)
-        .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 1))
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
+        .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 0.5))
     }
 
     private var uniqueTagCount: Int {

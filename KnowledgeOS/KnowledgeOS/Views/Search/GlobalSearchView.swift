@@ -20,7 +20,7 @@ struct GlobalSearchView: View {
                     }
                 }
                 .padding()
-                .background(Theme.surfaceElevated)
+                .background(Color.white.opacity(0.5))
 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
@@ -120,7 +120,7 @@ struct GlobalSearchView: View {
                     .padding()
                 }
             }
-            .background(Theme.bg)
+            .background(Color(.systemBackground))
         }
         .onAppear {
             if let userId = authService.userId {

@@ -53,12 +53,11 @@ struct BookCardView: View {
             }
         }
         .padding(Theme.cardPadding)
-        .background(Theme.surface)
+        .background(Theme.glassCardMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
         .overlay(
             RoundedRectangle(cornerRadius: Theme.cardRadius)
-                .stroke(Theme.border, lineWidth: 1)
+                .stroke(Theme.border, lineWidth: 0.5)
         )
-        .clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius))
     }
 
     private var coverPlaceholder: some View {

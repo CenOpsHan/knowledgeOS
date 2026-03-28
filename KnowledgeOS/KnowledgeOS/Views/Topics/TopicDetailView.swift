@@ -26,7 +26,7 @@ struct TopicDetailView: View {
                                 .font(.subheadline.weight(.medium))
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
-                                .background(filter == f ? Theme.accent : Theme.surfaceElevated)
+                                .background(filter == f ? Theme.accent : Color.white.opacity(0.5))
                                 .foregroundColor(filter == f ? .white : Theme.textSecondary)
                                 .clipShape(Capsule())
                         }
@@ -53,7 +53,7 @@ struct TopicDetailView: View {
             }
             .padding()
         }
-        .background(Theme.bg)
+        .background(Color(.systemBackground))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if let userId = authService.userId {

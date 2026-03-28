@@ -57,22 +57,22 @@ struct ExtractDetailView: View {
                             TextField("Page #", text: $editPageNumber)
                                 .keyboardType(.numberPad)
                                 .padding(10)
-                                .background(Theme.surfaceElevated)
+                                .background(Color.white.opacity(0.5))
                                 .cornerRadius(Theme.inputRadius)
-                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
                             TextField("Page range", text: $editPageRange)
                                 .padding(10)
-                                .background(Theme.surfaceElevated)
+                                .background(Color.white.opacity(0.5))
                                 .cornerRadius(Theme.inputRadius)
-                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
                         }
 
                         TextField("Chapter", text: $editChapter)
                             .padding(10)
-                            .background(Theme.surfaceElevated)
+                            .background(Color.white.opacity(0.5))
                             .cornerRadius(Theme.inputRadius)
-                            .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                            .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
                     } else {
                         Text(extract.content)
                             .font(.system(.body, design: .monospaced))
@@ -126,7 +126,7 @@ struct ExtractDetailView: View {
             }
             .padding()
         }
-        .background(Theme.bg)
+        .background(Color(.systemBackground))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -184,42 +184,3 @@ struct ExtractDetailView: View {
 }
 
 // MARK: - Flow Layout
-struct FlowLayout: Layout {
-    var spacing: CGFloat
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = arrange(proposal: proposal, subviews: subviews)
-        return result.size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = arrange(proposal: proposal, subviews: subviews)
-        for (index, subview) in subviews.enumerated() {
-            subview.place(at: CGPoint(x: bounds.minX + result.positions[index].x, y: bounds.minY + result.positions[index].y), proposal: .unspecified)
-        }
-    }
-
-    private func arrange(proposal: ProposedViewSize, subviews: Subviews) -> (size: CGSize, positions: [CGPoint]) {
-        let maxWidth = proposal.width ?? .infinity
-        var positions: [CGPoint] = []
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var maxHeight: CGFloat = 0
-        var rowMaxHeight: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x + size.width > maxWidth && x > 0 {
-                x = 0
-                y += rowMaxHeight + spacing
-                rowMaxHeight = 0
-            }
-            positions.append(CGPoint(x: x, y: y))
-            x += size.width + spacing
-            rowMaxHeight = max(rowMaxHeight, size.height)
-            maxHeight = max(maxHeight, y + size.height)
-        }
-
-        return (CGSize(width: maxWidth, height: maxHeight), positions)
-    }
-}

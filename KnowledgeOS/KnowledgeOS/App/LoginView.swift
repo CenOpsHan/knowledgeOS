@@ -47,7 +47,7 @@ struct LoginView: View {
         }
         .padding(32)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.bg)
+        .background(Color(.systemBackground))
     }
 
     private func signIn() {

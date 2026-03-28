@@ -19,12 +19,29 @@ struct AddBookView: View {
                                 .onChange(of: viewModel.searchQuery) { _ in viewModel.search() }
                         }
                         .padding()
-                        .background(Theme.surface)
+                        .background(Color.white.opacity(0.5))
                         .cornerRadius(Theme.inputRadius)
                         .overlay(
                             RoundedRectangle(cornerRadius: Theme.inputRadius)
-                                .stroke(Theme.border, lineWidth: 1)
+                                .stroke(Theme.border, lineWidth: 0.5)
                         )
+
+                        if viewModel.isSearching {
+                            HStack {
+                                ProgressView()
+                                Text("Searching...")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textSecondary)
+                            }
+                            .padding(.top, 4)
+                        }
+
+                        if let error = viewModel.searchError, viewModel.searchResults.isEmpty && !viewModel.isSearching {
+                            Text(error)
+                                .font(.caption)
+                                .foregroundColor(Theme.textTertiary)
+                                .padding(.top, 4)
+                        }
 
                         if !viewModel.searchResults.isEmpty {
                             VStack(spacing: 0) {
@@ -54,8 +71,7 @@ struct AddBookView: View {
                                     Divider().background(Theme.border)
                                 }
                             }
-                            .background(Theme.surfaceElevated)
-                            .cornerRadius(Theme.cardRadius)
+                            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
                         }
                     }
 
@@ -115,7 +131,7 @@ struct AddBookView: View {
                 }
                 .padding()
             }
-            .background(Theme.bg)
+            .background(Color(.systemBackground))
             .navigationTitle("Add Book")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -133,11 +149,11 @@ struct AddBookView: View {
                 .foregroundColor(Theme.textSecondary)
             TextField(placeholder ?? label, text: text)
                 .padding()
-                .background(Theme.surface)
+                .background(Color.white.opacity(0.5))
                 .cornerRadius(Theme.inputRadius)
                 .overlay(
                     RoundedRectangle(cornerRadius: Theme.inputRadius)
-                        .stroke(Theme.border, lineWidth: 1)
+                        .stroke(Theme.border, lineWidth: 0.5)
                 )
         }
     }

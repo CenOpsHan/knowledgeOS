@@ -15,7 +15,7 @@ struct KnowledgeOSApp: App {
             if authService.isLoading {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Theme.bg)
+                    .background(Color(.systemBackground))
             } else if authService.isSignedIn {
                 ContentView()
                     .environmentObject(authService)

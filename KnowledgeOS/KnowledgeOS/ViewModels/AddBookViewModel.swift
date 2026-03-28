@@ -20,13 +20,17 @@ class AddBookViewModel: ObservableObject {
     private let firestoreService = FirestoreService()
     private var searchTask: Task<Void, Never>?
 
+    @Published var searchError: String?
+
     func search() {
         searchTask?.cancel()
         guard searchQuery.count >= 3 else {
             searchResults = []
+            searchError = nil
             return
         }
         isSearching = true
+        searchError = nil
         searchTask = Task {
             try? await Task.sleep(nanoseconds: 400_000_000)
             guard !Task.isCancelled else { return }
@@ -34,8 +38,13 @@ class AddBookViewModel: ObservableObject {
                 let results = try await googleBooksService.search(query: searchQuery)
                 if !Task.isCancelled {
                     searchResults = results
+                    searchError = results.isEmpty ? "No results found" : nil
                 }
-            } catch {}
+            } catch {
+                if !Task.isCancelled {
+                    searchError = "Search failed: \(error.localizedDescription)"
+                }
+            }
             isSearching = false
         }
     }

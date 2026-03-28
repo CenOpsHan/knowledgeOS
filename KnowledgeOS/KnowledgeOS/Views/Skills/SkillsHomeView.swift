@@ -10,7 +10,7 @@ struct SkillsHomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Skills")
-                        .font(.title2.bold())
+                        .font(.largeTitle.bold())
                     + Text(" · \(viewModel.skills.count)")
                         .foregroundColor(Theme.textTertiary)
 
@@ -49,7 +49,7 @@ struct SkillsHomeView: View {
             }
             .padding()
         }
-        .background(Theme.bg)
+        .background(Color(.systemBackground))
         .sheet(isPresented: $showCreateSkill) {
             CreateSkillView()
                 .environmentObject(authService)
@@ -86,8 +86,7 @@ struct SkillsHomeView: View {
         }
         .padding(Theme.cardPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Theme.surface)
-        .cornerRadius(Theme.cardRadius)
-        .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 1))
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
+        .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 0.5))
     }
 }

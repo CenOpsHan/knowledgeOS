@@ -21,7 +21,7 @@ struct SkillDetailView: View {
             }
             .padding()
         }
-        .background(Theme.bg)
+        .background(Color(.systemBackground))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -107,9 +107,8 @@ struct SkillDetailView: View {
                     }
                 }
                 .padding(Theme.cardPadding)
-                .background(Theme.surface)
-                .cornerRadius(Theme.cardRadius)
-                .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 1))
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
+                .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 0.5))
             }
         }
     }
@@ -128,15 +127,15 @@ struct SkillDetailView: View {
                     TextField("Skill name", text: $viewModel.editName)
                         .font(.title3.weight(.semibold))
                         .padding(10)
-                        .background(Theme.surface)
+                        .background(Color.white.opacity(0.5))
                         .cornerRadius(Theme.inputRadius)
-                        .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                        .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
                     TextField("Description", text: $viewModel.editDescription)
                         .padding(10)
-                        .background(Theme.surface)
+                        .background(Color.white.opacity(0.5))
                         .cornerRadius(Theme.inputRadius)
-                        .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                        .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
                 }
             }
 
@@ -161,13 +160,12 @@ struct SkillDetailView: View {
                         .frame(minHeight: 100)
                         .scrollContentBackground(.hidden)
                         .padding(8)
-                        .background(Theme.surfaceElevated)
+                        .background(Color.white.opacity(0.4))
                         .cornerRadius(Theme.inputRadius)
                 }
                 .padding(Theme.cardPadding)
-                .background(Theme.surface)
-                .cornerRadius(Theme.cardRadius)
-                .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 1))
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
+                .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 0.5))
             }
 
             Button {

@@ -5,50 +5,21 @@ import GoogleSignInSwift
 
 @MainActor
 class AuthService: ObservableObject {
-    @Published var user: User?
-    @Published var isLoading = true
+    @Published var isLoading = false
 
-    private var authStateHandle: AuthStateDidChangeListenerHandle?
+    // Local dev mode: skip Google Sign-In, use a fixed identity
+    private let localEmail = "jonathan@hannestad.co"
+    private let localUserId = "local_jonathan_hannestad"
 
-    init() {
-        authStateHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
-            Task { @MainActor in
-                self?.user = user
-                self?.isLoading = false
-            }
-        }
-    }
-
-    deinit {
-        if let handle = authStateHandle {
-            Auth.auth().removeStateDidChangeListener(handle)
-        }
-    }
-
-    var isSignedIn: Bool { user != nil }
-    var userId: String? { user?.uid }
+    var isSignedIn: Bool { true }
+    var userId: String? { localUserId }
+    var userEmail: String? { localEmail }
 
     func signInWithGoogle() async throws {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let rootViewController = windowScene.windows.first?.rootViewController else {
-            throw NSError(domain: "AuthService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No root view controller"])
-        }
-
-        let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
-        guard let idToken = result.user.idToken?.tokenString else {
-            throw NSError(domain: "AuthService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Missing ID token"])
-        }
-
-        let credential = GoogleAuthProvider.credential(
-            withIDToken: idToken,
-            accessToken: result.user.accessToken.tokenString
-        )
-
-        try await Auth.auth().signIn(with: credential)
+        // No-op in local dev mode
     }
 
     func signOut() throws {
-        GIDSignIn.sharedInstance.signOut()
-        try Auth.auth().signOut()
+        // No-op in local dev mode
     }
 }

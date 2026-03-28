@@ -9,7 +9,7 @@ struct TagInputView: View {
     @State private var allTags: [Tag] = []
     @State private var showSuggestions = false
     private let firestoreService = FirestoreService()
-    private var listener: ListenerRegistration?
+    @State private var listener: ListenerRegistration?
 
     var suggestions: [Tag] {
         guard !inputText.isEmpty else { return [] }
@@ -65,9 +65,9 @@ struct TagInputView: View {
                 }
             }
             .padding(10)
-            .background(Theme.surface)
+            .background(Color.white.opacity(0.5))
             .cornerRadius(Theme.inputRadius)
-            .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+            .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
             // Suggestions
             if !suggestions.isEmpty {
@@ -86,9 +86,8 @@ struct TagInputView: View {
                         Divider()
                     }
                 }
-                .background(Theme.surfaceElevated)
-                .cornerRadius(Theme.inputRadius)
-                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.inputRadius))
+                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
             }
         }
         .task {

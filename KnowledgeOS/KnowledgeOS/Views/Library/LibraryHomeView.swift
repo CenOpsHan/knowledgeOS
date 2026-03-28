@@ -18,7 +18,7 @@ struct LibraryHomeView: View {
                     // Header
                     HStack {
                         Text("Library")
-                            .font(.title2.bold())
+                            .font(.largeTitle.bold())
                         Text("· \(viewModel.books.count) books")
                             .foregroundColor(Theme.textTertiary)
                         Spacer()
@@ -44,12 +44,10 @@ struct LibraryHomeView: View {
                                         .font(.subheadline.weight(.medium))
                                         .padding(.horizontal, 16)
                                         .padding(.vertical, 8)
-                                        .background(viewModel.statusFilter == status ? Theme.accent : Theme.surfaceElevated)
+                                        .background(viewModel.statusFilter == status ? Theme.accent : .clear)
+                                        .background(viewModel.statusFilter == status ? AnyShapeStyle(.clear) : AnyShapeStyle(Theme.glassMaterial), in: Capsule())
                                         .foregroundColor(viewModel.statusFilter == status ? .white : Theme.textSecondary)
                                         .clipShape(Capsule())
-                                        .overlay(
-                                            Capsule().stroke(viewModel.statusFilter == status ? Color.clear : Theme.border, lineWidth: 1)
-                                        )
                                 }
                             }
                         }
@@ -94,7 +92,7 @@ struct LibraryHomeView: View {
             }
             .padding()
         }
-        .background(Theme.bg)
+        .background(Color(.systemBackground).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {

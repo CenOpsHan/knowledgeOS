@@ -33,7 +33,7 @@ struct CaptureExtractView: View {
                 default: EmptyView()
                 }
             }
-            .background(Theme.bg)
+            .background(Color(.systemBackground))
             .navigationTitle("Capture Extract")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -54,10 +54,9 @@ struct CaptureExtractView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Theme.surfaceElevated)
                     .foregroundColor(Theme.textPrimary)
-                    .cornerRadius(Theme.cardRadius)
-                    .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 1))
+                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
+                    .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 0.5))
             }
 
             PhotosPicker(
@@ -69,10 +68,9 @@ struct CaptureExtractView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Theme.surfaceElevated)
                     .foregroundColor(Theme.textPrimary)
-                    .cornerRadius(Theme.cardRadius)
-                    .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 1))
+                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
+                    .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 0.5))
             }
             .onChange(of: photoPickerItems) { items in
                 Task { await loadPhotos(items) }
@@ -151,20 +149,19 @@ struct CaptureExtractView: View {
                                 .font(.system(.body, design: .monospaced))
                                 .frame(minHeight: 120)
                                 .scrollContentBackground(.hidden)
-                                .background(Theme.surface)
+                                .background(Color.white.opacity(0.4))
                                 .cornerRadius(Theme.inputRadius)
-                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
                             TextField("Page #", text: $ocrResults[index].pageNumber)
                                 .keyboardType(.numberPad)
                                 .padding()
-                                .background(Theme.surface)
+                                .background(Color.white.opacity(0.5))
                                 .cornerRadius(Theme.inputRadius)
-                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
                         }
                         .padding()
-                        .background(Theme.surfaceElevated)
-                        .cornerRadius(Theme.cardRadius)
+                        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
                     }
 
                     Button {
@@ -206,9 +203,9 @@ struct CaptureExtractView: View {
 
                 TextField("Chapter (optional)", text: $chapter)
                     .padding()
-                    .background(Theme.surface)
+                    .background(Color.white.opacity(0.5))
                     .cornerRadius(Theme.inputRadius)
-                    .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                    .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
                 if let userId = authService.userId {
                     TagInputView(selectedTags: $tags, userId: userId)

@@ -11,7 +11,7 @@ struct TopicsHomeView: View {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Text("Topics")
-                        .font(.title2.bold())
+                        .font(.largeTitle.bold())
                     + Text(" · \(viewModel.tags.count)")
                         .foregroundColor(Theme.textTertiary)
 
@@ -31,9 +31,9 @@ struct TopicsHomeView: View {
 
                 TextField("Filter tags...", text: $searchText)
                     .padding()
-                    .background(Theme.surface)
+                    .background(Color.white.opacity(0.5))
                     .cornerRadius(Theme.inputRadius)
-                    .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                    .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
                 let filtered = viewModel.tags.filter {
                     searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)
@@ -81,7 +81,7 @@ struct TopicsHomeView: View {
             }
             .padding()
         }
-        .background(Theme.bg)
+        .background(Color(.systemBackground))
         .onAppear {
             if let userId = authService.userId {
                 viewModel.subscribe(userId: userId)

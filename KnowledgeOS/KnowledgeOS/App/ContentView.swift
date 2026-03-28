@@ -33,6 +33,6 @@ struct ContentView: View {
             .tag(2)
         }
         .tint(Theme.accent)
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
     }
 }

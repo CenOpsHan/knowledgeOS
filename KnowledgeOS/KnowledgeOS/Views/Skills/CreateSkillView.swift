@@ -21,24 +21,23 @@ struct CreateSkillView: View {
                             .font(.system(size: 36))
                             .frame(width: 64, height: 64)
                             .multilineTextAlignment(.center)
-                            .background(Theme.surfaceElevated)
-                            .cornerRadius(Theme.cardRadius)
-                            .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 1))
+                            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
+                            .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).stroke(Theme.border, lineWidth: 0.5))
 
                         VStack(spacing: 8) {
                             TextField("e.g. SEO Playbook", text: $name)
                                 .font(.headline)
                                 .padding()
-                                .background(Theme.surface)
+                                .background(Color.white.opacity(0.5))
                                 .cornerRadius(Theme.inputRadius)
-                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
                             TextField("What is this skill about?", text: $description)
                                 .font(.subheadline)
                                 .padding()
-                                .background(Theme.surface)
+                                .background(Color.white.opacity(0.5))
                                 .cornerRadius(Theme.inputRadius)
-                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
                         }
                     }
 
@@ -47,22 +46,21 @@ struct CreateSkillView: View {
                             TextField("Section title", text: $sections[index].title)
                                 .font(.subheadline.weight(.semibold))
                                 .padding()
-                                .background(Theme.surface)
+                                .background(Color.white.opacity(0.5))
                                 .cornerRadius(Theme.inputRadius)
-                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
 
                             TextEditor(text: $sections[index].content)
                                 .font(.body)
                                 .frame(minHeight: 100)
                                 .scrollContentBackground(.hidden)
                                 .padding(8)
-                                .background(Theme.surface)
+                                .background(Color.white.opacity(0.4))
                                 .cornerRadius(Theme.inputRadius)
-                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 0.5))
                         }
                         .padding(Theme.cardPadding)
-                        .background(Theme.surfaceElevated)
-                        .cornerRadius(Theme.cardRadius)
+                        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
                     }
 
                     Button {
@@ -73,8 +71,7 @@ struct CreateSkillView: View {
                             .foregroundColor(Theme.textSecondary)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Theme.surfaceElevated)
-                            .cornerRadius(Theme.cardRadius)
+                            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
                             .overlay(
                                 RoundedRectangle(cornerRadius: Theme.cardRadius)
                                     .stroke(Theme.border, style: StrokeStyle(lineWidth: 1, dash: [6]))
@@ -94,7 +91,7 @@ struct CreateSkillView: View {
                 }
                 .padding()
             }
-            .background(Theme.bg)
+            .background(Color(.systemBackground))
             .navigationTitle("New Skill")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

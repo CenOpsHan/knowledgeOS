@@ -54,7 +54,7 @@ struct KnowledgePickerView: View {
                     TextField("Search...", text: $searchText)
                 }
                 .padding(10)
-                .background(Theme.surface)
+                .background(Color.white.opacity(0.5))
                 .cornerRadius(Theme.inputRadius)
                 .padding(.horizontal)
                 .padding(.top, 8)
@@ -69,7 +69,7 @@ struct KnowledgePickerView: View {
                                 .font(.caption.weight(.medium))
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
-                                .background(filter == f ? Theme.accent : Theme.surfaceElevated)
+                                .background(filter == f ? Theme.accent : Color.white.opacity(0.5))
                                 .foregroundColor(filter == f ? .white : Theme.textSecondary)
                                 .clipShape(Capsule())
                         }
@@ -111,7 +111,7 @@ struct KnowledgePickerView: View {
                                             Spacer()
                                         }
                                         .padding(12)
-                                        .background(selectedExtracts.contains(id) ? Theme.accentDim : Theme.surface)
+                                        .background(selectedExtracts.contains(id) ? Theme.accentDim : Color.white.opacity(0.5))
                                         .cornerRadius(Theme.inputRadius)
                                     }
                                     .buttonStyle(.plain)
@@ -153,7 +153,7 @@ struct KnowledgePickerView: View {
                                             Spacer()
                                         }
                                         .padding(12)
-                                        .background(selectedSyntheses.contains(id) ? Theme.accentDim : Theme.surface)
+                                        .background(selectedSyntheses.contains(id) ? Theme.accentDim : Color.white.opacity(0.5))
                                         .cornerRadius(Theme.inputRadius)
                                     }
                                     .buttonStyle(.plain)
@@ -171,7 +171,7 @@ struct KnowledgePickerView: View {
                     .padding(.bottom)
                 }
             }
-            .background(Theme.bg)
+            .background(Color(.systemBackground))
             .navigationTitle("Link Knowledge")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -1,33 +1,37 @@
 import SwiftUI
 
 enum Theme {
-    // MARK: - Colors
-    static let bg = Color(hex: "0A0A0C")
-    static let surface = Color(hex: "131318")
-    static let surfaceElevated = Color(hex: "1A1A22")
-    static let surfaceHover = Color(hex: "22222E")
-    static let border = Color(hex: "2A2A38")
-    static let borderHover = Color(hex: "3A3A4D")
+    // MARK: - Colors (Light / Glass UI)
+    static let bg = Color(.systemBackground)
+    static let surface = Color.white.opacity(0.6)
+    static let surfaceElevated = Color.white.opacity(0.75)
+    static let surfaceHover = Color.white.opacity(0.85)
+    static let border = Color.black.opacity(0.08)
+    static let borderHover = Color.black.opacity(0.12)
 
-    static let textPrimary = Color(hex: "E8E8F0")
-    static let textSecondary = Color(hex: "9898A8")
-    static let textTertiary = Color(hex: "686878")
+    static let textPrimary = Color(hex: "1A1A2E")
+    static let textSecondary = Color(hex: "6B7280")
+    static let textTertiary = Color(hex: "9CA3AF")
 
-    static let accent = Color(hex: "6366F1")
-    static let accentLight = Color(hex: "818CF8")
-    static let accentDim = Color(hex: "6366F1").opacity(0.12)
+    static let accent = Color(hex: "0071FA")
+    static let accentLight = Color(hex: "3D94FF")
+    static let accentDim = Color(hex: "0071FA").opacity(0.10)
 
     static let extract = Color(hex: "F59E0B")
-    static let extractDim = Color(hex: "F59E0B").opacity(0.04)
+    static let extractDim = Color(hex: "F59E0B").opacity(0.08)
 
     static let synthesis = Color(hex: "22C55E")
-    static let synthesisDim = Color(hex: "22C55E").opacity(0.04)
+    static let synthesisDim = Color(hex: "22C55E").opacity(0.08)
 
     static let skill = Color(hex: "8B5CF6")
-    static let skillDim = Color(hex: "8B5CF6").opacity(0.04)
+    static let skillDim = Color(hex: "8B5CF6").opacity(0.08)
 
     static let destructive = Color(hex: "EF4444")
     static let star = Color(hex: "FBBF24")
+
+    // MARK: - Glass
+    static let glassMaterial: Material = .ultraThinMaterial
+    static let glassCardMaterial: Material = .thinMaterial
 
     // MARK: - Tag Color Palette
     static let tagColors: [String] = [
@@ -39,8 +43,8 @@ enum Theme {
     // MARK: - Spacing
     static let cardPadding: CGFloat = 16
     static let cardGap: CGFloat = 16
-    static let cardRadius: CGFloat = 12
-    static let inputRadius: CGFloat = 8
+    static let cardRadius: CGFloat = 16
+    static let inputRadius: CGFloat = 12
     static let sectionSpacing: CGFloat = 24
 }
 
