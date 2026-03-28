@@ -5,7 +5,7 @@ struct BookCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // Cover
+            // Cover with book-style shadow
             Group {
                 if let coverUrl = book.coverUrl, let url = URL(string: coverUrl) {
                     CachedAsyncImage(url: url) {
@@ -16,7 +16,9 @@ struct BookCardView: View {
                 }
             }
             .aspectRatio(2/3, contentMode: .fit)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: 4))
+            .shadow(color: .black.opacity(0.25), radius: 8, x: 4, y: 4)
+            .shadow(color: .black.opacity(0.1), radius: 2, x: 1, y: 1)
 
             // Title
             Text(book.title)
@@ -50,12 +52,6 @@ struct BookCardView: View {
                 }
             }
         }
-        .padding(Theme.cardPadding)
-        .background(Theme.glassCardMaterial, in: RoundedRectangle(cornerRadius: Theme.cardRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: Theme.cardRadius)
-                .stroke(Theme.border, lineWidth: 0.5)
-        )
     }
 
     private var coverPlaceholder: some View {
