@@ -1,4 +1,5 @@
 import SwiftUI
+import MarkdownUI
 
 struct AddSynthesisView: View {
     @EnvironmentObject var authService: AuthService
@@ -51,8 +52,8 @@ struct AddSynthesisView: View {
                         .background(Theme.surface)
 
                         if showPreview {
-                            // Simple markdown rendering (use MarkdownUI in real app)
-                            Text(content)
+                            Markdown(content)
+                                .markdownTheme(.gitHub)
                                 .padding()
                                 .frame(maxWidth: .infinity, minHeight: 200, alignment: .topLeading)
                         } else {
@@ -72,10 +73,9 @@ struct AddSynthesisView: View {
                         .cornerRadius(Theme.inputRadius)
                         .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
 
-                    Text("Tags")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundColor(Theme.textSecondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    if let userId = authService.userId {
+                        TagInputView(selectedTags: $tags, userId: userId)
+                    }
                 }
                 .padding()
             }
@@ -102,6 +102,7 @@ struct AddSynthesisView: View {
         guard let userId = authService.userId else { return }
         isSaving = true
         Task {
+            defer { isSaving = false }
             let synthesis = Synthesis(
                 bookId: bookId,
                 title: title.trimmingCharacters(in: .whitespaces),

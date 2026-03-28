@@ -59,7 +59,7 @@ export default function SkillDetailPage() {
   if (!skill) return <p className="text-text-secondary text-center py-16">Skill not found</p>
 
   const handleSave = async () => {
-    if (!user) return
+    if (!user || !editForm.name.trim()) return
     await updateSkill(user.uid, skillId, {
       name: editForm.name,
       description: editForm.description,

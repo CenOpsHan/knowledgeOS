@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './hooks/useAuth'
 import AuthGate from './components/Layout/AuthGate'
 import TabBar from './components/Layout/TabBar'
@@ -39,6 +39,7 @@ export default function App() {
               <Route path="/skill/:skillId" element={<SkillDetailPage />} />
               <Route path="/topics" element={<TopicsPage />} />
               <Route path="/topic/:tagName" element={<TopicDetailPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
           <TabBar />

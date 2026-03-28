@@ -43,6 +43,17 @@ struct BookDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
+                    Menu("Status") {
+                        Button { updateStatus("reading") } label: {
+                            Label("Reading", systemImage: book.status == "reading" ? "checkmark" : "book")
+                        }
+                        Button { updateStatus("finished") } label: {
+                            Label("Finished", systemImage: book.status == "finished" ? "checkmark" : "checkmark.circle")
+                        }
+                        Button { updateStatus("wishlist") } label: {
+                            Label("Wishlist", systemImage: book.status == "wishlist" ? "checkmark" : "bookmark")
+                        }
+                    }
                     Button(role: .destructive) { showDelete = true } label: {
                         Label("Delete Book", systemImage: "trash")
                     }
@@ -268,6 +279,13 @@ struct BookDetailView: View {
                     .buttonStyle(.plain)
                 }
             }
+        }
+    }
+
+    private func updateStatus(_ status: String) {
+        guard let userId = authService.userId, let bookId = book.id else { return }
+        Task {
+            await viewModel.updateBook(userId: userId, bookId: bookId, data: ["status": status])
         }
     }
 }

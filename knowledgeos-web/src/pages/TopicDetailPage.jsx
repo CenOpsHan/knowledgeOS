@@ -19,7 +19,7 @@ export default function TopicDetailPage() {
   const decodedTag = decodeURIComponent(tagName)
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { tags } = useTags()
+  const { tags, loading: tagsLoading } = useTags()
   const { extracts } = useExtracts()
   const { syntheses } = useSyntheses()
   const { books } = useBooks()
@@ -90,7 +90,13 @@ export default function TopicDetailPage() {
     navigate('/topics')
   }
 
-  if (!tag) return <LoadingSpinner />
+  if (tagsLoading) return <LoadingSpinner />
+  if (!tag) return (
+    <div className="text-center py-16">
+      <p className="text-text-secondary">Tag &quot;{decodedTag}&quot; not found</p>
+      <button onClick={() => navigate('/topics')} className="mt-4 text-accent hover:underline">Back to Topics</button>
+    </div>
+  )
 
   return (
     <div>

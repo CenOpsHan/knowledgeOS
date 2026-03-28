@@ -52,6 +52,27 @@ struct ExtractDetailView: View {
                             .font(.system(.body, design: .monospaced))
                             .frame(minHeight: 150)
                             .scrollContentBackground(.hidden)
+
+                        HStack(spacing: 12) {
+                            TextField("Page #", text: $editPageNumber)
+                                .keyboardType(.numberPad)
+                                .padding(10)
+                                .background(Theme.surfaceElevated)
+                                .cornerRadius(Theme.inputRadius)
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+
+                            TextField("Page range", text: $editPageRange)
+                                .padding(10)
+                                .background(Theme.surfaceElevated)
+                                .cornerRadius(Theme.inputRadius)
+                                .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
+                        }
+
+                        TextField("Chapter", text: $editChapter)
+                            .padding(10)
+                            .background(Theme.surfaceElevated)
+                            .cornerRadius(Theme.inputRadius)
+                            .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
                     } else {
                         Text(extract.content)
                             .font(.system(.body, design: .monospaced))

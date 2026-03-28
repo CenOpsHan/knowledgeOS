@@ -64,6 +64,10 @@ export default function KnowledgePicker({
   }
 
   const totalSelected = selectedExtracts.size + selectedSyntheses.size
+  const hasChanges = [...selectedExtracts].some(id => !initialExtractIds.has(id)) ||
+    [...initialExtractIds].some(id => !selectedExtracts.has(id)) ||
+    [...selectedSyntheses].some(id => !initialSynthesisIds.has(id)) ||
+    [...initialSynthesisIds].some(id => !selectedSyntheses.has(id))
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -191,7 +195,7 @@ export default function KnowledgePicker({
               onLink(toLink, toLinkSynth, toUnlinkExtracts, toUnlinkSynth)
             }}
             className="btn-primary w-full"
-            disabled={totalSelected === 0}
+            disabled={!hasChanges}
           >
             Link {totalSelected} Selected
           </button>

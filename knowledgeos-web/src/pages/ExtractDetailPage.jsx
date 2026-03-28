@@ -56,7 +56,7 @@ export default function ExtractDetailPage() {
   )
 
   const handleSave = async () => {
-    if (!user) return
+    if (!user || !editForm.content.trim()) return
     await updateExtract(user.uid, extractId, {
       content: editForm.content,
       pageNumber: editForm.pageNumber ? Number(editForm.pageNumber) : null,

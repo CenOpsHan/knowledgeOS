@@ -23,15 +23,21 @@ export function useSearch(query) {
           b.title?.toLowerCase().includes(q) ||
           b.authors?.some((a) => a.toLowerCase().includes(q))
       ),
-      extracts: extracts.filter((e) => e.content?.toLowerCase().includes(q)),
+      extracts: extracts.filter(
+        (e) =>
+          e.content?.toLowerCase().includes(q) ||
+          e.tags?.some((t) => t.toLowerCase().includes(q))
+      ),
       syntheses: syntheses.filter(
         (s) =>
           s.title?.toLowerCase().includes(q) ||
-          s.content?.toLowerCase().includes(q)
+          s.content?.toLowerCase().includes(q) ||
+          s.tags?.some((t) => t.toLowerCase().includes(q))
       ),
       skills: skills.filter(
         (s) =>
           s.name?.toLowerCase().includes(q) ||
+          s.description?.toLowerCase().includes(q) ||
           s.sections?.some((sec) => sec.content?.toLowerCase().includes(q))
       ),
     }

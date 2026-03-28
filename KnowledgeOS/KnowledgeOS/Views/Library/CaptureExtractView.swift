@@ -210,10 +210,9 @@ struct CaptureExtractView: View {
                     .cornerRadius(Theme.inputRadius)
                     .overlay(RoundedRectangle(cornerRadius: Theme.inputRadius).stroke(Theme.border, lineWidth: 1))
 
-                // Tags section (simplified — would use TagInputView component)
-                Text("Tags")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundColor(Theme.textSecondary)
+                if let userId = authService.userId {
+                    TagInputView(selectedTags: $tags, userId: userId)
+                }
 
                 Button {
                     saveExtracts()

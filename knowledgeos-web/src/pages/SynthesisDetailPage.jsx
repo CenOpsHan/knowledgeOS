@@ -44,7 +44,7 @@ export default function SynthesisDetailPage() {
   )
 
   const handleSave = async () => {
-    if (!user) return
+    if (!user || !editForm.title.trim()) return
     await updateSynthesis(user.uid, synthesisId, {
       title: editForm.title,
       content: editForm.content,
