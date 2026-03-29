@@ -97,11 +97,11 @@ struct BookDetailView: View {
     private var heroSection: some View {
         VStack(spacing: 12) {
             if let coverUrl = book.coverUrl, let url = URL(string: coverUrl) {
-                CachedAsyncImage(url: url) { ProgressView() }
-                    .aspectRatio(2/3, contentMode: .fit)
-                    .frame(width: 120)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .shadow(radius: 8)
+                BookCoverView(width: 120, fixedAspectRatio: nil) {
+                    CachedAsyncImage(url: url) { ProgressView() }
+                        .aspectRatio(contentMode: .fit)
+                }
+                .frame(width: 130) // 120 + spine + page edges
             }
 
             Text(book.title)

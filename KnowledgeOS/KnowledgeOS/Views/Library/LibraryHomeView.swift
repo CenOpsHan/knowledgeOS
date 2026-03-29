@@ -7,8 +7,8 @@ struct LibraryHomeView: View {
     @State private var showSearch = false
 
     private let columns = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 24),
+        GridItem(.flexible(), spacing: 24),
     ]
 
     var body: some View {
@@ -67,7 +67,7 @@ struct LibraryHomeView: View {
                         }
                         .frame(maxWidth: .infinity, minHeight: 200)
                     } else {
-                        LazyVGrid(columns: columns, spacing: 16) {
+                        LazyVGrid(columns: columns, spacing: 24) {
                             ForEach(viewModel.filteredBooks) { book in
                                 NavigationLink(destination: BookDetailView(book: book)) {
                                     BookCardView(book: book)
@@ -77,7 +77,8 @@ struct LibraryHomeView: View {
                         }
                     }
                 }
-                .padding()
+                .padding(.horizontal, 24)
+                .padding(.vertical)
             }
 
             // FAB
