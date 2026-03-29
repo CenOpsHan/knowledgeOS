@@ -2,8 +2,21 @@ import Foundation
 import Vision
 import UIKit
 
+struct OCRTextBlock: Identifiable {
+    let id = UUID()
+    let text: String
+    /// Bounding box in normalized coordinates (0...1), origin at bottom-left (Vision convention)
+    let boundingBox: CGRect
+    var isSelected: Bool = true
+}
+
 class OCRService {
     func recognizeText(from image: UIImage) async throws -> String {
+        let blocks = try await recognizeBlocks(from: image)
+        return blocks.map(\.text).joined(separator: "\n")
+    }
+
+    func recognizeBlocks(from image: UIImage) async throws -> [OCRTextBlock] {
         guard let cgImage = image.cgImage else {
             throw NSError(domain: "OCRService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid image"])
         }
@@ -21,11 +34,15 @@ class OCRService {
                 }
 
                 let observations = request.results as? [VNRecognizedTextObservation] ?? []
-                let text = observations
-                    .compactMap { $0.topCandidates(1).first?.string }
-                    .joined(separator: "\n")
+                let blocks = observations.compactMap { obs -> OCRTextBlock? in
+                    guard let candidate = obs.topCandidates(1).first else { return nil }
+                    return OCRTextBlock(
+                        text: candidate.string,
+                        boundingBox: obs.boundingBox
+                    )
+                }
 
-                continuation.resume(returning: text)
+                continuation.resume(returning: blocks)
             }
 
             request.recognitionLevel = .accurate
